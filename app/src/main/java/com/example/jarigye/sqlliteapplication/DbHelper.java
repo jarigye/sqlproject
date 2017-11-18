@@ -148,17 +148,59 @@ class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<String> getRows(){
-        String query =  " SELECT  id,name, quizstudent ,(select unique_no from students where id=quizstudent) as unique_no, mark FROM quiz where quizcourse =1";
-        SQLiteDatabase db = getWritableDatabase();
+    public ArrayList<String> getMaxScore(int id){
 
+        String query =  " select * " +
+                "from ( Select " +
+                "     Max(Case name When 'Q1' Then mark End) Q1," +
+                "     Max(Case name When 'Q2' Then mark End) Q2," +
+                "     Max(Case name When 'Q3' Then mark End) Q3," +
+                "     Max(Case name When 'Q4' Then mark End) Q4," +
+                "     Max(Case name When 'Q5' Then mark End) Q5" +
+                "   From  quiz where quizcourse=" + id+") " +
+                "where Q1 = (SELECT max(Q1) FROM ( Select " +
+                "     Max(Case name When 'Q1' Then mark End) Q1," +
+                "     Max(Case name When 'Q2' Then mark End) Q2," +
+                "     Max(Case name When 'Q3' Then mark End) Q3," +
+                "     Max(Case name When 'Q4' Then mark End) Q4," +
+                "     Max(Case name When 'Q5' Then mark End) Q5" +
+                "   From  quiz where quizcourse=" + id+"))";
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor  cursor = db.rawQuery(query,null);
         ArrayList<String> list= new ArrayList<String>();
-
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                String name = cursor.getString(cursor.getColumnIndex("id"));
-                list.add(name);
+                list.add(cursor.getString(cursor.getColumnIndex("Q1")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q2")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q3")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q4")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q5")));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+    public ArrayList<String> getMinScore(int id){
+
+        String query =  "Select " +
+                "     Min(Case name When 'Q1' Then mark End) Q1," +
+                "     Min(Case name When 'Q2' Then mark End) Q2," +
+                "     Min(Case name When 'Q3' Then mark End) Q3," +
+                "     Min(Case name When 'Q4' Then mark End) Q4," +
+                "     Min(Case name When 'Q5' Then mark End) Q5" +
+                "   From  quiz where quizcourse=" + id;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor  cursor = db.rawQuery(query,null);
+        ArrayList<String> list= new ArrayList<String>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                list.add(cursor.getString(cursor.getColumnIndex("Q1")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q2")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q3")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q4")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q5")));
                 cursor.moveToNext();
             }
         }
@@ -174,7 +216,6 @@ class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
@@ -196,25 +237,33 @@ class DBHelper extends SQLiteOpenHelper {
         id=res1.getInt(0);
         return id;
     }
-    public ArrayList<String> getAllStudents(String course) {
+    public ArrayList<String> getAllMarks(int id) {
         
         ArrayList<String> array_list = new ArrayList<String>();
-
-        //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT  id  FROM courses where name like " + course;
+        String selectQuery = " Select (select unique_no from students where id=quizstudent) as unique_no," +
+                "     Max(Case name When 'Q1' Then mark End) Q1," +
+                "     Max(Case name When 'Q2' Then mark End) Q2," +
+                "     Max(Case name When 'Q3' Then mark End) Q3," +
+                "     Max(Case name When 'Q4' Then mark End) Q4," +
+                "     Max(Case name When 'Q5' Then mark End) Q5" +
+                "   From  quiz where quizcourse="+id +
+                "   Group By unique_no";
 
         Cursor res1 =  db.rawQuery(selectQuery, null );
-        
-        Cursor res =  db.rawQuery( "SELECT  (select unique_no from students where id=quizstudent)as unique_no ,*FROM quiz where quizstudent=1", null );
-        res.moveToFirst();
+        res1.moveToFirst();
 
-        while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex("unique_no")));
-            array_list.add(res.getString(res.getColumnIndex("name")));
-            array_list.add(res.getString(res.getColumnIndex("mark")));
-            res.moveToNext();
+        while(res1.isAfterLast() == false){
+            array_list.add(res1.getString(res1.getColumnIndex("unique_no")));
+            array_list.add(res1.getString(res1.getColumnIndex("Q1")));
+            array_list.add(res1.getString(res1.getColumnIndex("Q2")));
+            array_list.add(res1.getString(res1.getColumnIndex("Q3")));
+            array_list.add(res1.getString(res1.getColumnIndex("Q4")));
+            array_list.add(res1.getString(res1.getColumnIndex("Q5")));
+            res1.moveToNext();
         }
+        res1.close();
+        db.close();
         return array_list;
     }
 }
