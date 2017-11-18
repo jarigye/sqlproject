@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         ArrayList<String> list = new ArrayList();
-        list=db.getMaxScore(a);
+        list=db.getMaximumScore(a);
          if (list.size() != 0) {
              TableRow tra = new TableRow(this);
              TextView a2 = new TextView(this);
@@ -126,8 +126,6 @@ public class MainActivity extends AppCompatActivity implements
             }
               tableLayout.addView(tra,new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT));
          }
-
-
         ArrayList<String> list1 = new ArrayList();
           list1=db.getMinScore(a);
            if (list1.size() != 0) {
@@ -145,13 +143,23 @@ public class MainActivity extends AppCompatActivity implements
               tableLayout.addView(tri, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
            }
 
-           
+        ArrayList<String> list2 = new ArrayList();
+        list2=db.getAvgScore(a);
+        if (list2.size() != 0) {
            TableRow trp = new TableRow(this);
             TextView a4 = new TextView(this);
             a4.setText("Average");
             a4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,TableRow.LayoutParams.WRAP_CONTENT));
             trp.addView(a4);
+            for (String y : list2) {
+                TextView art = new TextView(this);
+                art.setText(y);
+                art.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                trp.addView(art);
+            }
+
             tableLayout.addView(trp,new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT));
+       }
     }
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {

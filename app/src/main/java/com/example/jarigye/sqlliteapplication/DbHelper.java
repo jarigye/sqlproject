@@ -140,14 +140,6 @@ class DBHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-    public Cursor getData(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        //Cursor res1 =  db.rawQuery( "select * from marks where id="+id+"", null );
-        Cursor res =  db.rawQuery( "select * from courses", null );
-        return res;
-    }
-
-
     public ArrayList<String> getMaxScore(int id){
 
         String query =  " select * " +
@@ -190,6 +182,58 @@ class DBHelper extends SQLiteOpenHelper {
                 "     Min(Case name When 'Q3' Then mark End) Q3," +
                 "     Min(Case name When 'Q4' Then mark End) Q4," +
                 "     Min(Case name When 'Q5' Then mark End) Q5" +
+                "   From  quiz where quizcourse=" + id;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor  cursor = db.rawQuery(query,null);
+        ArrayList<String> list= new ArrayList<String>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                list.add(cursor.getString(cursor.getColumnIndex("Q1")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q2")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q3")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q4")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q5")));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+    public ArrayList<String> getAvgScore(int id){
+
+        String query =  "Select " +
+                "     Avg(Case name When 'Q1' Then mark End) Q1," +
+                "     Avg(Case name When 'Q2' Then mark End) Q2," +
+                "     Avg(Case name When 'Q3' Then mark End) Q3," +
+                "     Avg(Case name When 'Q4' Then mark End) Q4," +
+                "     Avg(Case name When 'Q5' Then mark End) Q5" +
+                "   From  quiz where quizcourse=" + id;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor  cursor = db.rawQuery(query,null);
+        ArrayList<String> list= new ArrayList<String>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                list.add(cursor.getString(cursor.getColumnIndex("Q1")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q2")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q3")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q4")));
+                list.add(cursor.getString(cursor.getColumnIndex("Q5")));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+    public ArrayList<String> getMaximumScore(int id){
+
+        String query =  "Select " +
+                "     Max(Case name When 'Q1' Then mark End) Q1," +
+                "     Max(Case name When 'Q2' Then mark End) Q2," +
+                "     Max(Case name When 'Q3' Then mark End) Q3," +
+                "     Max(Case name When 'Q4' Then mark End) Q4," +
+                "     Max(Case name When 'Q5' Then mark End) Q5" +
                 "   From  quiz where quizcourse=" + id;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor  cursor = db.rawQuery(query,null);
