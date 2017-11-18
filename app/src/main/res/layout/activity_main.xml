@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.jarigye.sqlliteapplication.MainActivity">
-
-    <LinearLayout
-        android:layout_width="384dp"
-        android:layout_height="495dp"
-        android:layout_weight="1"
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="202dp"
         android:orientation="vertical"
+        android:padding="5dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="8dp">
-
+        tools:layout_editor_absoluteY="178dp">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="18dp">
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="103dp"
-            android:layout_height="39dp"
-            android:text="Course:" />
-
+            android:id="@+id/txt1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dip"
+            android:text="Course Title:"
+            />
+        <!-- Spinner Dropdown -->
         <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="217dp"
-            android:layout_height="wrap_content" />
+            android:id="@+id/spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="27dp"
+            tools:layout_editor_absoluteY="46dp" />
+    <!--</LinearLayout>-->
 
 
-    </LinearLayout>
-
+</TableLayout>
 </android.support.constraint.ConstraintLayout>
